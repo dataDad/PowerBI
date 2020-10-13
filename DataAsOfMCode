@@ -1,0 +1,10 @@
+let
+    Source = DateTime.LocalNow(),
+    #"Converted to Table" = #table(1, {{Source}}),
+    #"Changed Type" = Table.TransformColumnTypes(#"Converted to Table",{{"Column1", type datetime}}),
+    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"Column1", "Refresh Time"}}),
+    #"Changed Type1" = Table.TransformColumnTypes(#"Renamed Columns",{{"Refresh Time", type date}}),
+    #"Added Custom" = Table.AddColumn(#"Changed Type1", "Data As Of", each "Data As of " & Date.ToText([Refresh Time],"dd MMM yy")),
+    #"Data As Of" = #"Added Custom"{0}[Data As Of]
+in
+    #"Data As Of"
