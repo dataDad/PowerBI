@@ -1,0 +1,11 @@
+let
+    Source = Sql.Databases("bielitecrypto.database.windows.net"),
+    Crypto = Source{[Name="Crypto"]}[Data],
+    dbo_historical_prices_hour = Crypto{[Schema="dbo",Item="historical_prices_hour"]}[Data],
+    #"Filtered Rows" = Table.SelectRows(dbo_historical_prices_hour, each true),
+    #"Renamed Columns" = Table.RenameColumns(#"Filtered Rows",{{"datetime", "closingDateTime"}}),
+    #"Extracted First Characters" = Table.TransformColumns(#"Renamed Columns", {{"pair", each Text.Start(_, 3), type text}}),
+    #"Renamed Columns1" = Table.RenameColumns(#"Extracted First Characters",{{"pair", "coin"}}),
+    #"Filtered Rows1" = Table.SelectRows(#"Renamed Columns1", each ([coin] = "ETH"))
+in
+    #"Filtered Rows1"
