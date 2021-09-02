@@ -1,0 +1,20 @@
+Rolling 30 Day Average =
+CALCULATE (
+    SUM ( 'stock prices'[price.close] ),
+    --29 days for 20 day average
+    DATESINPERIOD (
+        'stock prices'[ref.date],
+        LASTDATE ( 'stock prices'[ref.date] ),
+        -43,
+        DAY
+    )
+)
+    / CALCULATE (
+        DISTINCTCOUNT ( 'stock prices'[ref.date] ),
+        DATESINPERIOD (
+            'stock prices'[ref.date],
+            LASTDATE ( 'stock prices'[ref.date] ),
+            -43,
+            DAY
+        )
+    ) 
