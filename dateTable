@@ -1,0 +1,25 @@
+let
+    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WMjDUByIjAyMDpdhYAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [StartDate = _t]),
+    #"Added Custom" = Table.AddColumn(Source, "EndDate", each Date.From(DateTime.LocalNow())),
+    #"Changed Type2" = Table.TransformColumnTypes(#"Added Custom",{{"EndDate", type date}}),
+    #"Changed Type" = Table.TransformColumnTypes(#"Changed Type2",{{"StartDate", type date}}),
+    #"Added Custom1" = Table.AddColumn(#"Changed Type", "Date", each {Number.From([StartDate])..Number.From([EndDate])}),
+    #"Expanded Dates" = Table.ExpandListColumn(#"Added Custom1", "Date"),
+    #"Changed Type1" = Table.TransformColumnTypes(#"Expanded Dates",{{"Date", type date}}),
+    #"Removed Columns1" = Table.RemoveColumns(#"Changed Type1",{"StartDate", "EndDate"}),
+    #"Added Custom2" = Table.AddColumn(#"Removed Columns1", "Year", each Date.Year([Date])),
+    #"Added Custom3" = Table.AddColumn(#"Added Custom2", "Month", each Date.Month([Date])),
+    #"Added Custom4" = Table.AddColumn(#"Added Custom3", "MonthName", each Date.MonthName([Date])),
+    #"Added Custom5" = Table.AddColumn(#"Added Custom4", "ShortMonthName", each Text.Start([MonthName],3)),
+    #"Added Custom6" = Table.AddColumn(#"Added Custom5", "Quarter", each Date.QuarterOfYear([Date])),
+    #"Changed Type3" = Table.TransformColumnTypes(#"Added Custom6",{{"Quarter", type text}}),
+    #"Added Custom7" = Table.AddColumn(#"Changed Type3", "QtrText", each "Qtr "& [Quarter]),
+    #"Added Custom8" = Table.AddColumn(#"Added Custom7", "DateKey", each Date.ToText([Date], "yyyyMMdd")),
+    #"Changed Type4" = Table.TransformColumnTypes(#"Added Custom8",{{"DateKey", Int64.Type}}),
+    #"Reordered Columns" = Table.ReorderColumns(#"Changed Type4",{"DateKey", "Date", "Year", "Month", "MonthName", "ShortMonthName", "Quarter", "QtrText"}),
+    #"Added Custom9" = Table.AddColumn(#"Reordered Columns", "MonthSortBy", each Date.ToText([Date], "yyyyMM")),
+    #"Changed Type5" = Table.TransformColumnTypes(#"Added Custom9",{{"Year", type text}, {"MonthSortBy", Int64.Type}}),
+    #"Added Custom11" = Table.AddColumn(#"Changed Type5", "MonthSortByRev", each [MonthSortBy] * -1),
+    #"Changed Type7" = Table.TransformColumnTypes(#"Added Custom11",{{"MonthSortByRev", Int64.Type}})
+in
+    #"Changed Type7"
