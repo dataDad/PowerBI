@@ -1,0 +1,14 @@
+SDS % Change Color = 
+VAR currentPeriod = [MTD SDS]
+VAR prevPeriod = [Prior Year MTD SDS]
+VAR ratio = IF(
+        NOT ISBLANK(prevPeriod),
+        DIVIDE(currentPeriod - prevPeriod, prevPeriod)
+    )
+RETURN
+SWITCH( TRUE(),
+        ISBLANK(ratio), "#C3FFC1",
+        ratio > .05, "#C3FFC1",
+        ratio <= .05 && ratio >= -.05, "#252423",
+        ratio < -.05, "#FF866A"
+)
