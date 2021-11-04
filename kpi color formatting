@@ -1,0 +1,16 @@
+Phone Hours Per Week Color = 
+var latestWeek = MAX('Date'[FiscalWeek]) -- might need to use lastnonblank function in case there is no data in most recent fiscal week......
+VAR actual = CALCULATE('KPI Measures'[Phone Time],FILTER('Date','Date'[FiscalWeek]=latestWeek))
+
+VAR target = [Phone Hours Target]
+VAR ratio = IF(
+        NOT ISBLANK(target),
+        DIVIDE(actual, target)
+    )
+RETURN
+SWITCH( TRUE(),
+        ISBLANK(ratio), "#1AAB40", -- default set to green 
+        ratio >= 1, "#1AAB40",
+        ratio < 1 && ratio >= 0.5, "#D9B300",
+        ratio < 0.5, "#FF866A"
+)
