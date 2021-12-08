@@ -1,0 +1,14 @@
+TopTenFlagMTDCashFlow =
+--purpose of this measure is to highlight top n background of a list in a table.
+VAR top10 =
+    CALCULATE (
+        [MTD Cash Contribution Actual], --this is the measure of what you want the top n of
+        TOPN (
+            10,
+            ALL ( 'Site_List'[Site with Full Address] ),--this is the first column in the table.
+            [MTD Cash Contribution Actual], DESC
+        ),
+        VALUES ( 'Site_List'[Site with Full Address] )
+    ) --var color = IF(ISBLANK(top10),"white","green")
+RETURN
+    IF ( top10 <> BLANK (), "#01B8AA", BLANK () ) --this is my favorite green to highlight the text when it is a top 10.
