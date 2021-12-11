@@ -1,0 +1,11 @@
+--this measure finds the customers who purchased exactly one item.
+COUNTROWS(
+    FILTER(
+        SUMMARIZE(Orders,Customers[CustomerID],
+        "Total Purchases",[Total Transactions]),[Total Purchases]=1
+        )
+)
+
+
+--additional measure below
+Total Transactions = COUNTROWS(Orders)
