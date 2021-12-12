@@ -1,11 +1,8 @@
 --this measure finds the customers who purchased exactly one item.
+--summarize creates a virtual table. "Total purchases" is the name of the virtual column and its the distinctcount of orders
 COUNTROWS(
     FILTER(
-        SUMMARIZE(Orders,Customers[CustomerID],
-        "Total Purchases",[Total Transactions]),[Total Purchases]=1
+        SUMMARIZE(Orders,Orders[CustomerID],
+        "Total Purchases",DISTINCTCOUNT(Orders[OrderID])),[Total Purchases]=1
         )
 )
-
-
---additional measure below
-Total Transactions = COUNTROWS(Orders)
