@@ -1,0 +1,8 @@
+Flock Status Language Filter = 
+var selectedLang = [Current Language]
+--var userTableLangues = VALUES(Users[Language])
+var flockStatusTables = VALUES('Translated Flock Status'[Language Code])
+return
+
+IF(selectedLang IN flockStatusTables,"TRUE","FALSE")
+-- then in the filter itself, I set the Flock Status Language Filter = "TRUE"
