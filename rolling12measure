@@ -1,0 +1,9 @@
+Text
+VAR _MaxDate =
+        MAX ( All_Fuel_Power_BI_Format[AcctPeriodDate] )
+    VAR _12MoAgo =
+        EDATE ( _MaxDate, -12 )
+    VAR _CashContribution =
+        CALCULATE ( [Cash Contribution], DimDate[FullDate] >= _12MoAgo )
+    RETURN
+        _CashContribution
