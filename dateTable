@@ -20,6 +20,9 @@ let
     #"Added Custom9" = Table.AddColumn(#"Reordered Columns", "MonthSortBy", each Date.ToText([Date], "yyyyMM")),
     #"Changed Type5" = Table.TransformColumnTypes(#"Added Custom9",{{"Year", type text}, {"MonthSortBy", Int64.Type}}),
     #"Added Custom11" = Table.AddColumn(#"Changed Type5", "MonthSortByRev", each [MonthSortBy] * -1),
-    #"Changed Type7" = Table.TransformColumnTypes(#"Added Custom11",{{"MonthSortByRev", Int64.Type}})
+    #"Renamed Columns" = Table.RenameColumns(#"Added Custom11",{{"Month", "MonthNum"}}),
+    #"Changed Type7" = Table.TransformColumnTypes(#"Renamed Columns",{{"MonthSortByRev", Int64.Type}}),
+    #"Changed Type6" = Table.TransformColumnTypes(#"Changed Type7",{{"Year", Int64.Type}}),
+    #"Added Custom10" = Table.AddColumn(#"Changed Type6", "Month", each [ShortMonthName] &" " & Number.ToText([Year]-2000))
 in
-    #"Changed Type7"
+    #"Added Custom10"
