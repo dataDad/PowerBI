@@ -1,0 +1,29 @@
+List of Names = 
+VAR __DISTINCT_VALUES_COUNT = DISTINCTCOUNT('fusion fusions'[Users])
+VAR __MAX_VALUES_TO_SHOW = 6
+RETURN
+ 	IF(
+          	__DISTINCT_VALUES_COUNT > __MAX_VALUES_TO_SHOW,
+          	CONCATENATE(
+                    	CONCATENATEX(
+                              	TOPN(
+                                       	__MAX_VALUES_TO_SHOW,
+                                       	VALUES('fusion fusions'[Users]),
+                                       	'fusion fusions'[Users],
+                                       	ASC
+                              	),
+                              	'fusion fusions'[Users],
+                              	", ",
+                              	'fusion fusions'[Users],
+                              	ASC
+                    	),
+                    	", etc."
+          	),
+          	CONCATENATEX(
+                    	VALUES('fusion fusions'[Users]),
+                    	'fusion fusions'[Users],
+                    	", ",
+                    	'fusion fusions'[Users],
+                    	ASC
+          	)
+ 	)
