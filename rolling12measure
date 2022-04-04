@@ -1,4 +1,4 @@
-Text
+test =
 VAR _MaxDate =
         MAX ( All_Fuel_Power_BI_Format[AcctPeriodDate] )
     VAR _12MoAgo =
