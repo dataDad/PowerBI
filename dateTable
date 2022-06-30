@@ -24,6 +24,10 @@ let
     #"Changed Type7" = Table.TransformColumnTypes(#"Renamed Columns",{{"MonthSortByRev", Int64.Type}}),
     #"Changed Type6" = Table.TransformColumnTypes(#"Changed Type7",{{"Year", Int64.Type}}),
     #"Added Custom10" = Table.AddColumn(#"Changed Type6", "Month", each [ShortMonthName] &" " & Number.ToText([Year]-2000)),
-    #"Added Custom12" = Table.AddColumn(#"Added Custom10", "DayOfTheWeek", each Date.DayOfWeekName([Date]))
+    #"Added Custom12" = Table.AddColumn(#"Added Custom10", "DayOfTheWeek", each Date.DayOfWeekName([Date])),
+    #"Added Custom13" = Table.AddColumn(#"Added Custom12", "Name of day Concat", each [DayOfTheWeek] & " " & Date.ToText([Date])),
+    #"Changed Type8" = Table.TransformColumnTypes(#"Added Custom13",{{"Quarter", Int64.Type}}),
+    #"Added Custom14" = Table.AddColumn(#"Changed Type8", "YearQuarter", each Number.FromText(Number.ToText([Year])&Number.ToText([Quarter]))),
+    YearQuarter = #"Added Custom14"{18}[YearQuarter]
 in
-    #"Added Custom12"
+    YearQuarter
