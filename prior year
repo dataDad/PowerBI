@@ -1,0 +1,1 @@
+Prior Year Conversions = CALCULATE(COUNT('Conversions Historical'[Index]), DATEADD('Calendar'[Date], -1, YEAR))
