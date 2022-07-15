@@ -1,0 +1,16 @@
+My date table is called Date with the primary date column also being called 'Date' and the Day of Week (i.e. Mon, Tues, Wed, etc) is called 'Day Of Week'.
+[Net Sales] is simply SUM(Sales[SalesAmount])
+[Count of Days] is simply COUNT('Date'[Date])
+The IF(HASONEVALUE()) is likely redundant but I threw it in there.
+Essentially all I do is grab the 8-week date range, filter out to just that day of the week, then divide the sales by the number of days.
+At the end of it I could've just used the _RollingWeeks parameter as my denominator but I left the _DayCount in for testing purposes.
+------------------------------------------------------------------------------------------------------------
+DOW Avg Sales =
+var _RollingWeeks = 8
+var _CurrentDate = IF(HASONEVALUE('Date'[Date]),SELECTEDVALUE('Date'[Date]), MAX('Date'[Date]))
+var _StartDate = _CurrentDate - (_RollingWeeks * 7)
+var _DayOfWeek = LOOKUPVALUE('Date'[Day of Week], 'Date'[Date], _CurrentDate)
+var _NetSales = CALCULATE([Net Sales]), FILTER(ALL('Date'), 'Date'[Date] > _StartDate && 'Date'[Date] <= _CurrentDate && 'Date'[Day of Week] = _DayOfWeek))
+var _DayCount = CALCULATE([Count of Days], FILTER(ALL('Date'), 'Date'[Date] > _StartDate && 'Date'[Date] <= _CurrentDate && 'Date'[Day of Week] = _DayOfWeek))
+var _ret = DIVIDE(_NetSales, _DayCount)
+RETURN _ret
