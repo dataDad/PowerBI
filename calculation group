@@ -1,0 +1,559 @@
+-----------------------------------------
+-- Calculation Group: 'Time Intelligence'
+-----------------------------------------
+CALCULATIONGROUP 'Time Intelligence'[Period]    Precedence = 1
+
+    CALCULATIONITEM "CM" = 
+        TOTALMTD(
+            SELECTEDMEASURE(),
+            'Date_Dim'[Date]
+        )
+        Ordinal = 0
+
+    CALCULATIONITEM "PM" = 
+        CALCULATE(
+             SELECTEDMEASURE(),
+             PARALLELPERIOD( ( Date_Dim[Date] ), - 1, MONTH )
+         )
+        Ordinal = 1
+
+    CALCULATIONITEM "PM MTD" = 
+        CALCULATE(
+                SELECTEDMEASURE(),
+                DATESMTD(
+                    DATEADD(
+                        Date_Dim[Date], 
+                        -1,
+                        MONTH
+                    )
+                )
+            )
+        Ordinal = 2
+
+    CALCULATIONITEM "CM PY" = 
+        CALCULATE(
+            SELECTEDMEASURE(),
+            PARALLELPERIOD(
+                Date_Dim[Date],
+                -12,
+                MONTH
+            )
+        )
+        Ordinal = 3
+
+    CALCULATIONITEM "CM PY MTD" = 
+        CALCULATE(
+                SELECTEDMEASURE(),
+                DATESMTD(
+                    DATEADD(
+                        Date_Dim[Date], 
+                        -12,
+                        MONTH
+                    )
+                )
+            )
+        Ordinal = 4
+
+    CALCULATIONITEM "CM vs PM" = 
+        VAR CM = 
+            TOTALMTD(
+                SELECTEDMEASURE(),
+                'Date_Dim'[Date]
+            )
+        VAR PM = 
+             CALCULATE(
+                 SELECTEDMEASURE(),
+                 PARALLELPERIOD( ( Date_Dim[Date] ), - 1, MONTH )
+             )
+        RETURN
+            CM-PM
+        Ordinal = 5
+
+    CALCULATIONITEM "CM vs PM %" = 
+        VAR CM = 
+            TOTALMTD(
+                SELECTEDMEASURE(),
+                'Date_Dim'[Date]
+            )
+        VAR PM = 
+             CALCULATE(
+                 SELECTEDMEASURE(),
+                 PARALLELPERIOD( ( Date_Dim[Date] ), - 1, MONTH )
+             )
+        RETURN
+        
+            DIVIDE( CM - PM, PM )
+        FormatString = "0%; -0%;0%"
+        Ordinal = 6
+
+    CALCULATIONITEM "CM vs PM MTD" = 
+        VAR CM =
+            TOTALMTD(
+            SELECTEDMEASURE(),
+            'Date_Dim'[Date]
+        )
+        VAR PMMTD = 
+               CALCULATE(
+                SELECTEDMEASURE(),
+                DATESMTD(
+                    DATEADD(
+                        Date_Dim[Date], 
+                        -1,
+                        MONTH
+                    )
+                )
+            )
+        RETURN
+        CM-PMMTD
+        Ordinal = 7
+
+    CALCULATIONITEM "CM PM MTD%" = 
+        VAR CM =
+            TOTALMTD(
+            SELECTEDMEASURE(),
+            'Date_Dim'[Date]
+        )
+        VAR PMMTD = 
+               CALCULATE(
+                SELECTEDMEASURE(),
+                DATESMTD(
+                    DATEADD(
+                        Date_Dim[Date], 
+                        -1,
+                        MONTH
+                    )
+                )
+            )
+        RETURN
+        DIVIDE(
+            CM - PMMTD,
+            PMMTD
+        )
+        FormatString = "0%; -0%;0%"
+        Ordinal = 8
+
+    CALCULATIONITEM "CM vs CM PY" = 
+        VAR CM = 
+            TOTALMTD(
+                SELECTEDMEASURE(),
+                'Date_Dim'[Date]
+            )
+        VAR CMPY = 
+            CALCULATE(
+                SELECTEDMEASURE(),
+                PARALLELPERIOD(
+                    Date_Dim[Date],
+                    -12,
+                    MONTH
+                )
+            )
+        RETURN
+            CM-CMPY
+        Ordinal = 9
+
+    CALCULATIONITEM "CM vs CM PY %" = 
+        VAR CM = 
+            TOTALMTD(
+                SELECTEDMEASURE(),
+                'Date_Dim'[Date]
+            )
+        VAR CMPY = 
+            CALCULATE(
+                SELECTEDMEASURE(),
+                PARALLELPERIOD(
+                    Date_Dim[Date],
+                    -12,
+                    MONTH
+                )
+            )
+        RETURN
+            DIVIDE( CM - CMPY, CMPY )
+        FormatString = "0%; -0%;0%"
+        Ordinal = 10
+
+    CALCULATIONITEM "CM  vs CM PY MTD" = 
+        VAR CM = 
+            TOTALMTD(
+                SELECTEDMEASURE(),
+                'Date_Dim'[Date]
+            )
+        VAR CMPYMTD =    
+           CALCULATE(
+                SELECTEDMEASURE(),
+                DATESMTD(
+                    DATEADD(
+                        Date_Dim[Date], 
+                        -12,
+                        MONTH
+                    )
+                )
+            )
+        RETURN
+        CM-cmpymtd
+        Ordinal = 11
+
+    CALCULATIONITEM "CM vs CM PY MTD%      " = 
+        VAR CM = 
+            TOTALMTD(
+                SELECTEDMEASURE(),
+                'Date_Dim'[Date]
+            )
+        VAR CMPYMTD =    
+           CALCULATE(
+                SELECTEDMEASURE(),
+                DATESMTD(
+                    DATEADD(
+                        Date_Dim[Date], 
+                        -12,
+                        MONTH
+                    )
+                )
+            )
+        RETURN
+        DIVIDE(
+            CM - CMPYMTD, CMPYMTD
+        )
+        FormatString = "0%; -0%;0%"
+        Ordinal = 12
+
+    CALCULATIONITEM "YTD" = 
+        CALCULATE(
+            SELECTEDMEASURE(),
+            DATESYTD(
+                Date_Dim[Date]
+            )
+            
+        )
+        Ordinal = 13
+
+    CALCULATIONITEM "YTD PY" = 
+        TOTALYTD(
+            SELECTEDMEASURE(),
+            DATEADD( Date_Dim[Date], - 12, MONTH )
+            
+        )
+        Ordinal = 14
+
+    CALCULATIONITEM "Total PY" = 
+        CALCULATE(
+                SELECTEDMEASURE(),
+                PREVIOUSYEAR(Date_Dim[Date])
+            )
+        Ordinal = 15
+
+    CALCULATIONITEM "Total 2 Yrs Ago" = 
+        CALCULATE(
+                SELECTEDMEASURE(),
+                PREVIOUSYEAR(
+                    DATEADD( Date_Dim[Date], - 1, YEAR )
+                )
+            )
+        Ordinal = 16
+
+    CALCULATIONITEM "Total 3 Yrs Ago" = 
+        CALCULATE(
+                SELECTEDMEASURE(),
+                PREVIOUSYEAR(
+                    DATEADD( Date_Dim[Date], - 2, YEAR )
+                )
+            )
+        Ordinal = 17
+
+    CALCULATIONITEM "YOY YTD" = 
+        VAR CYTD =
+            CALCULATE(
+                SELECTEDMEASURE(),
+                DATESYTD(
+                    Date_Dim[Date]
+                )
+            )
+        VAR PYTD = 
+            TOTALYTD(
+                SELECTEDMEASURE(),
+                DATEADD( Date_Dim[Date], - 12, MONTH )
+                
+            )
+        
+        RETURN
+           CYTD-PYTD
+        Ordinal = 18
+
+    CALCULATIONITEM "YOY YTD%" = 
+        VAR CYTD =
+            CALCULATE(
+                SELECTEDMEASURE(),
+                DATESYTD(
+                    Date_Dim[Date]
+                )
+            )
+        VAR PYTD = 
+            TOTALYTD(
+                SELECTEDMEASURE(),
+                DATEADD( Date_Dim[Date], - 12, MONTH )
+                
+            )
+        
+        RETURN
+              
+            DIVIDE(
+                CYTD - PYTD,
+                PYTD
+            )
+        FormatString = "0%; -0%;0%"
+        Ordinal = 19
+
+    CALCULATIONITEM "CY vs Total PY" = 
+        VAR PY = 
+            CALCULATE(
+                SELECTEDMEASURE(),
+                PREVIOUSYEAR(Date_Dim[Date])
+            )
+        VAR CY =
+            CALCULATE(
+            SELECTEDMEASURE(),
+            DATESYTD(
+                Date_Dim[Date]
+            )
+        )
+        RETURN
+            CY-PY
+        Ordinal = 20
+
+    CALCULATIONITEM "CY vs Total PY%" = 
+        VAR PY = 
+            CALCULATE(
+                SELECTEDMEASURE(),
+                PREVIOUSYEAR(Date_Dim[Date])
+            )
+        VAR CY =
+            CALCULATE(
+            SELECTEDMEASURE(),
+            DATESYTD(
+                Date_Dim[Date]
+            )
+        )
+        RETURN
+            DIVIDE( CY - PY, py )
+        FormatString = "0%; -0%;0%"
+        Ordinal = 21
+
+    CALCULATIONITEM "CQ" = 
+        TOTALQTD(
+            SELECTEDMEASURE(),
+            Date_Dim[Date]
+        )
+        Ordinal = 22
+
+    CALCULATIONITEM "PQ" = 
+        CALCULATE(
+             SELECTEDMEASURE(),
+             PARALLELPERIOD( ( Date_Dim[Date] ), - 1, QUARTER)
+         )
+        Ordinal = 23
+
+    CALCULATIONITEM "PQTD" = 
+        CALCULATE(
+                SELECTEDMEASURE(),
+                DATESQTD(
+                    DATEADD(
+                        Date_Dim[Date], 
+                        -1,
+                        QUARTER
+                    )
+                )
+            )
+        Ordinal = 24
+
+    CALCULATIONITEM "CQ PY" = 
+        CALCULATE(
+            SELECTEDMEASURE(),
+            PARALLELPERIOD(
+                Date_Dim[Date],
+                -4,
+                QUARTER
+            )
+        )
+        Ordinal = 25
+
+    CALCULATIONITEM "CQTD PY" = 
+        CALCULATE(
+                SELECTEDMEASURE(),
+                DATESQTD(
+                    DATEADD(
+                        Date_Dim[Date], 
+                        -4,
+                        QUARTER
+                    )
+                )
+            )
+        Ordinal = 26
+
+    CALCULATIONITEM "CQ vs PQ" = 
+        VAR CQ = 
+            TOTALQTD(
+            SELECTEDMEASURE(),
+            Date_Dim[Date]
+        )
+        VAR PQ =
+             CALCULATE(
+             SELECTEDMEASURE(),
+             PARALLELPERIOD( ( Date_Dim[Date] ), - 1, QUARTER)
+         )
+         RETURN
+             CQ-pq
+        Ordinal = 27
+
+    CALCULATIONITEM "CQ vs PQ %" = 
+        VAR CQ = 
+            TOTALQTD(
+            SELECTEDMEASURE(),
+            Date_Dim[Date]
+        )
+        VAR PQ =
+             CALCULATE(
+             SELECTEDMEASURE(),
+             PARALLELPERIOD( ( Date_Dim[Date] ), - 1, QUARTER)
+         )
+         RETURN
+            DIVIDE(
+                CQ - PQ,
+                PQ
+            )
+        FormatString = "0%; -0%;0%"
+        Ordinal = 28
+
+    CALCULATIONITEM "CQ vs PQTD" = 
+        VAR CQ = 
+            TOTALQTD(
+            SELECTEDMEASURE(),
+            Date_Dim[Date]
+        )
+        VAR PQTD =
+            
+           CALCULATE(
+                SELECTEDMEASURE(),
+                DATESQTD(
+                    DATEADD(
+                        Date_Dim[Date], 
+                        -1,
+                        QUARTER
+                    )
+                )
+            )
+          RETURN
+             CQ-pqtd
+        Ordinal = 29
+
+    CALCULATIONITEM "CQ vs PQTD %" = 
+        VAR CQ = 
+            TOTALQTD(
+            SELECTEDMEASURE(),
+            Date_Dim[Date]
+        )
+        VAR PQTD =
+            
+           CALCULATE(
+                SELECTEDMEASURE(),
+                DATESQTD(
+                    DATEADD(
+                        Date_Dim[Date], 
+                        -1,
+                        QUARTER
+                    )
+                )
+            )
+          RETURN
+            DIVIDE(
+                CQ - PQTD,
+                PQTD
+            )
+        FormatString = "0%; -0%;0%"
+        Ordinal = 30
+
+    CALCULATIONITEM "CQ vs CQ PY" = 
+        VAR CQ = 
+            TOTALQTD(
+            SELECTEDMEASURE(),
+            Date_Dim[Date]
+        )
+        VAR CQPY = 
+            CALCULATE(
+            SELECTEDMEASURE(),
+            PARALLELPERIOD(
+                Date_Dim[Date],
+                -4,
+                QUARTER
+            )
+        )
+        RETURN
+            CQ-cqpy
+        Ordinal = 31
+
+    CALCULATIONITEM "CQ vs CQ PY %" = 
+        VAR CQ = 
+            TOTALQTD(
+            SELECTEDMEASURE(),
+            Date_Dim[Date]
+        )
+        VAR CQPY = 
+            CALCULATE(
+            SELECTEDMEASURE(),
+            PARALLELPERIOD(
+                Date_Dim[Date],
+                -4,
+                QUARTER
+            )
+        )
+        RETURN
+            DIVIDE(
+                CQ - CQPY,
+                CQPY
+            )
+        FormatString = "0%; -0%;0%"
+        Ordinal = 32
+
+    CALCULATIONITEM "CQ vs CQTD PY" = 
+        VAR CQ = 
+            TOTALQTD(
+            SELECTEDMEASURE(),
+            Date_Dim[Date]
+        )
+        VAR CQTDPY=
+               CALCULATE(
+                SELECTEDMEASURE(),
+                DATESQTD(
+                    DATEADD(
+                        Date_Dim[Date], 
+                        -4,
+                        QUARTER
+                    )
+                )
+            )
+         RETURN
+             CQ-cqtdpy
+        Ordinal = 33
+
+    CALCULATIONITEM "CQ vs CQTD PY %" = 
+        VAR CQ = 
+            TOTALQTD(
+            SELECTEDMEASURE(),
+            Date_Dim[Date]
+        )
+        VAR CQTDPY=
+               CALCULATE(
+                SELECTEDMEASURE(),
+                DATESQTD(
+                    DATEADD(
+                        Date_Dim[Date], 
+                        -4,
+                        QUARTER
+                    )
+                )
+            )
+         RETURN
+            DIVIDE(
+                CQ - CQTDPY,
+                CQTDPY
+            )
+        FormatString = "0%; -0%;0%"
+        Ordinal = 34
