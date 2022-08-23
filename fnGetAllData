@@ -1,0 +1,19 @@
+(endpoint as text, entityType as text, entityVariant as text)=>
+let
+    baseUrl = "https://" & apiHostName,
+    authHeader = "Bearer " & fnGetToken(),
+    query = "(entityType=" & entityType & ")+(entityVariant=" & entityVariant & ")+(limit=0)",
+    raw = Web.Contents(baseUrl, [
+        RelativePath="/api/" & endpoint,
+        Query=[#"query"=query],
+        Headers = [
+            Authorization=authHeader
+        ]]),
+        Source = Json.Document(raw),
+        #"Converted to Table" = Table.FromList(Source, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+        #"Expanded Column1" = Table.ExpandRecordColumn(#"Converted to Table", "Column1", {"data", "id"}, {"data", "id"}),
+        #"Reordered Columns" = Table.ReorderColumns(#"Expanded Column1",{"id", "data"})
+        
+        
+    in
+     #"Reordered Columns"
