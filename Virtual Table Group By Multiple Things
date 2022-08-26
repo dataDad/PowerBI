@@ -1,0 +1,9 @@
+Profit Summarized = 
+--this virtual table is used to determine if a store is a same store
+--we sum the profit by month by site
+SUMMARIZE(Volume,
+'Date'[Month],
+Volume[Site Lookup],
+"Total Profit", SUM(Volume[Profit]
+)
+)
