@@ -1,0 +1,2 @@
+SELECT * FROM $SYSTEM.TMSCHEMA_MEASURES
+-- run this in dax studio
