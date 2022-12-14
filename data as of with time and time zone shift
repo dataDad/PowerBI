@@ -1,0 +1,11 @@
+let
+    Source = DateTime.LocalNow(),
+    #"Converted to Table" = #table(1, {{Source}}),
+    #"Changed Type" = Table.TransformColumnTypes(#"Converted to Table",{{"Column1", type datetime}}),
+    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"Column1", "Refresh Time"}}),
+    #"Changed Type1" = Table.TransformColumnTypes(#"Renamed Columns",{{"Refresh Time", type datetime}}),
+    #"Added Custom1" = Table.AddColumn(#"Changed Type1", "time zone shift", each [Refresh Time] - #duration(0,5,0,0)),
+    #"Added Custom" = Table.AddColumn(#"Added Custom1", "Data As Of", each "Data as of " & DateTime.ToText([time zone shift])),
+    #"Removed Columns" = Table.RemoveColumns(#"Added Custom",{"Refresh Time", "time zone shift"})
+in
+    #"Removed Columns"
