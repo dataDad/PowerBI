@@ -1,0 +1,9 @@
+Cumulative Part Sales = 
+CALCULATE (
+    SUM ( 'Parts Sales Line'[Line Amount] ),
+    FILTER (
+        ALL ( 'Date'[Date] ),
+        'Date'[Date] <= MAX ( 'Parts Sales Line'[Sales Order Created Date] )
+    )
+)
+--https://community.powerbi.com/t5/Desktop/Cumulative-total-by-week-number/m-p/77153
