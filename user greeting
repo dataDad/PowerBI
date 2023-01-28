@@ -1,0 +1,7 @@
+User Greeting = 
+var usersNameLength = SEARCH(".",USERPRINCIPALNAME())
+var firstName = LEFT(USERPRINCIPALNAME(),usersNameLength-1)
+var formattedFirstName = UPPER(LEFT(firstName,1)) & Mid(firstName,2,usersNameLength-1)
+
+return
+"Welcome to Reporting Links "  & formattedFirstName
