@@ -1,3 +1,11 @@
-Y axis max bing clicks = 
-MAXX(SUMMARIZE(BingConversion,'Calendar'[Month Year],BingConversion[Creative],"Max Clicks",SUM(BingConversion[Clicks])),[Max Clicks])*1.25
+Y axis max bing form fills =
+MAXX (
+    SUMMARIZE (
+        BingConversion,
+        'Calendar'[Month Year],
+        BingConversion[Creative],
+        "Max Clicks", SUM ( BingConversion[Formfills] )
+    ),
+    [Max Clicks]
+) * 1.25
 --this measure gives us a dynamic axis with a cusion (*1.25) so that when we have groups in the measure, our axis doesn't go too big
