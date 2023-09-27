@@ -1,0 +1,6 @@
+ I needed to create a measure that calculated a distinct count on a visual which had several filters applied to it. He showed me the ALLSELECTED function which is quite useful in these situations.
+ 
+https://www.sqlbi.com/articles/introducing-allselected-in-dax/
+ 
+
+One note from Cory is that ALLSELECTED is a complicated function and we should remember one key rule to know. ALLSELECTED is to only use it in TOP level measures. Never reference a measure that uses ALLSELECTED. Following that should keep you pretty safe. 
