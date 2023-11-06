@@ -1,0 +1,14 @@
+--
+-- % Sales
+-- Measure in Sales table
+--
+% Sales :=
+VAR SalesAmt = [Sales Amount]
+VAR AllSales =
+ SUMX (
+ ALL ( Sales ),
+ Sales[Quantity] * Sales[Net Price]
+ )
+VAR Result = DIVIDE ( SalesAmt, AllSales )
+RETURN
+ Result
