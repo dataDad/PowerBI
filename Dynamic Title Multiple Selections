@@ -1,9 +1,10 @@
-Dynamic Title = 
-if(
-  isfiltered('Date'[Year]),
-  if(
-    hasonevalue('Date'[Year],
-    "Sales by Year: " & SELECTEDVALUE('Date'[Year]),
-    "Sales by Year: " & CONCATENATEX(VALUES('Date'[Year], 'Date'[Year], ", ")
+Dynamic Title Regions = 
+--The purpose of this measure is to title our charts dynamically based on slicer selections
+IF(
+  ISFILTERED('Branches'[Region])=TRUE(),
+  IF(
+    HASONEVALUE('Branches'[Region]),
+    "Sales by Region: " & SELECTEDVALUE('Branches'[Region]),
+    "Sales by Region: " & CONCATENATEX(VALUES('Branches'[Region]), 'Branches'[Region], ", ")
 ),
-"Sales for All Years"))
+"Sales for All Regions")
