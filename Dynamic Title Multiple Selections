@@ -1,0 +1,9 @@
+Dynamic Title = 
+if(
+  isfiltered('Date'[Year]),
+  if(
+    hasonevalue('Date'[Year],
+    "Sales by Year: " & SELECTEDVALUE('Date'[Year]),
+    "Sales by Year: " & CONCATENATEX(VALUES('Date'[Year], 'Date'[Year], ", ")
+),
+"Sales for All Years"))
