@@ -1,0 +1,16 @@
+Subtitle Margin KPI = 
+VAR MoMChange = [% Change Margin $ YoY]
+VAR YoYChange = [% Change Margin % YoY] 
+--display
+VAR MomPrefix =
+    IF ( MoMChange > 0, "Margin $ YoY ▲ ", "Margin $ YoY ▼ " )
+VAR YoYPrefix =
+    IF ( YoYChange > 0, "Margin % YoY ▲ ", "Margin % YoY ▼ " )
+VAR MoMMessage =
+    MomPrefix
+        & CONVERT ( FORMAT ( [% Change Margin $ YoY], "+#.0%;-#.0%" ), STRING )
+VAR YoYMessage =
+    YoYPrefix
+        & CONVERT ( FORMAT ( [% Change Margin % YoY], "+#.0%;-#.0%" ), STRING )
+RETURN
+    MoMMessage & UNICHAR ( 10 ) & YoYMessage
