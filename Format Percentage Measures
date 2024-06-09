@@ -1,0 +1,6 @@
+Format Percentages
+--one can easilly format percentages in Power BI by pasting the following string in the Format drop down
++#0%;-#0%
+--if using the percentage in a title/subtitle or card, you can use the custom format in a string with the convert function
+    MomPrefix
+        & CONVERT ( FORMAT ( [% Change Margin $ YoY], "+#.0%;-#.0%" ), STRING )
