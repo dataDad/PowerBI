@@ -1,0 +1,12 @@
+Total Sales with YoY % Change Data Label = 
+var perChange = CONVERT ( FORMAT ( [% Change Sales YoY], "+#.0%;-#.0%" ), STRING )
+var sales = [Total Sales]
+var totalSalesFormatted = --add M for values in Millions, K for thousands
+    SWITCH(
+    TRUE(),
+    sales>=1000000,FORMAT(sales/1000000,"#,0.##") & "M",
+    sales>=1000,FORMAT(sales/1000,"#,0") & "K",
+    FORMAT(sales, "#,0"))
+var result = totalSalesFormatted & " (" & perchange & ")"
+return
+result
