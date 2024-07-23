@@ -1,0 +1,58 @@
+Sales Forecast - Trend = 
+VAR CurrentYear = MAX('Date'[Year])
+VAR PriorYears = 
+    SUMMARIZE(
+        FILTER(
+        ALL('Date'),
+        'Date'[Year] >= CurrentYear-1
+        ), 
+        'Date'[Year], 'Date'[Week])
+        
+VAR WeeklyData = 
+    FILTER(
+		CALCULATETABLE(
+			ADDCOLUMNS(
+			PriorYears,
+			"Revenue", [Revenue]), ALL('Date')
+    	),
+		[Revenue]<>BLANK())
+VAR Stats = 
+    LINESTX(
+        WeeklyData,
+        [Revenue],
+        [Week]
+    )
+VAR Slope = MAXX(Stats, [Slope1])
+
+VAR Intercept = 
+SELECTCOLUMNS(Stats, "Intercept", [Intercept])
+
+var WeeksCount = COUNTROWS(PriorYears)
+
+RETURN Slope * (MAX('Date'[Week])+WeeksCount) + Intercept
+Now we need to calculate the Detrended revenue:
+
+DetrendedRevenue = 
+[Revenue] - [Sales Forecast - Trend]
+Now let’s calculate Seasonality:
+
+Sales Forecast - Seasonality = 
+VAR CurrentYear = MAX('Date'[Year])
+VAR CurrentWeek = MAX('Date'[Week])
+VAR PriorYears = 
+    SUMMARIZE(
+        FILTER(
+            ALL('Date'),
+            'Date'[Year] < CurrentYear 
+            && 'Date'[Week] = CurrentWeek
+        ),
+        'Date'[Year],
+        'Date'[Week],
+        "_Sales", [DetrendedRevenue]
+    )
+RETURN 
+    AVERAGEX(PriorYears, [_Sales])
+And now we put it all together:
+
+Sales Forecast = 
+[Sales Forecast - Seasonality] + [Sales Forecast - Trend]
