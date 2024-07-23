@@ -1,3 +1,4 @@
+--https://www.obvience.com/blog/dax-calculation-for-time-series-forecast
 Sales Forecast - Trend = 
 VAR CurrentYear = MAX('Date'[Year])
 VAR PriorYears = 
