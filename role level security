@@ -1,0 +1,5 @@
+--dynamic rls use USERPRINCIPALNAME like so
+[Regional Manager Email] == USERPRINCIPALNAME()
+--admin view to override rls - can be done making a role, or having admin be a member of a workspace
+set column = TRUE()
+--GOOD RESOURCE HERE = https://exceleratorbi.com.au/ways-to-configure-rls-in-power-bi/
