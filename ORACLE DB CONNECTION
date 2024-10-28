@@ -1,20 +1,16 @@
 How to Connect to Oracle DB from Power BI Service 
 
- 
-
-We must download the following software on the power bi gateway machine.  
- 
+We must download the following software on the power bi gateway machine.   
 
 The required software to download: 
 
-Oracle express XE (21 is the current version) 
-
-Java (Java 8 we used) 
-
-Text editor to edit oracle files. 
+ Oracle express XE (21 is the current version) 
  
-
-Edit the following oracle files. Original code found here. 
+ Java (Java 8 we used) 
+ 
+ Text editor to edit oracle files. 
+  
+Edit the following oracle files.
 
 LISTENER.ORA 
 
@@ -52,13 +48,7 @@ URIPRDDB =
   ) 
  
 
- 
-
- 
-
 SQLNET.ORA 
-
- 
 
 Change this line from: 
 
@@ -68,9 +58,6 @@ to
 
 (SQLNET.AUTHENTICATION_SERVICES= (NONE) 
  
- 
- 
-
 Restart the power bi gateway 
 Step 1: Open Services (press Windows + R, type services.msc, and press Enter). 
 
