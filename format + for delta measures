@@ -1,0 +1,4 @@
+ 
+With the measure selected, we can paste the following format string up in the format drop down for the measure. 
+(this is for a percent change measure) +#0%;-#0% is the string I used to add the + sign and round to the nearest %. 
+(to add more precision, like to the nearest tenth you can add a decimal point to the string like so => +#0.0%;-#0.0%)
