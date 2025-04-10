@@ -1,0 +1,33 @@
+Ticket Age Highlight Color = 
+VAR CurrentTicketAge = SELECTEDVALUE(Incidents[Ticket Age])
+
+-- Calculate 90th and 80th percentiles for open tickets only
+VAR P90 =
+    PERCENTILEX.INC(
+        FILTER(
+            ALL(Incidents),
+            Incidents[State] <> "Resolved" &&
+            Incidents[State] <> "Closed"
+        ),
+        Incidents[Ticket Age],
+        0.9
+    )
+
+VAR P80 =
+    PERCENTILEX.INC(
+        FILTER(
+            ALL(Incidents),
+            Incidents[State] <> "Resolved" &&
+            Incidents[State] <> "Closed"
+        ),
+        Incidents[Ticket Age],
+        0.8
+    )
+
+RETURN
+SWITCH(
+    TRUE(),
+    CurrentTicketAge >= P90, "#FF9999",    -- Light Red
+    CurrentTicketAge >= P80, "#FFFF99",    -- Light Yellow
+    BLANK()
+)
