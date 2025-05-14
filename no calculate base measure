@@ -1,0 +1,14 @@
+Sum No Pickle =
+VAR __Table = 'Table'
+VAR __NoPickleTable = 
+    FILTER(
+        __Table, 
+        [Item] <> "Pickle"
+    )
+VAR __SumNoPickle = 
+    SUMX(
+        __NoPickleTable, 
+        [Total Cost]
+    )
+RETURN
+    __SumNoPickle
