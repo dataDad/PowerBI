@@ -1,0 +1,9 @@
+CF Current Budget Remaining Background Color = 
+VAR currentBudget = [_CurrentBudgetRemaining]
+RETURN
+SWITCH( TRUE(),
+        ISBLANK(currentBudget), "#C3FFC1",
+        currentBudget > 10000, "#C3FFC1",
+        currentBudget <= 10000 && currentBudget >= 1000, "#E4C896",
+        currentBudget < 1000, "#FF866A"
+)
