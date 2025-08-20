@@ -1,0 +1,5 @@
+CF Scatter Plot X Axis Max = 
+MAXX (
+    VALUES(report_usage[report_name]),
+    [Distinct Users]) *1.1
+--this measure gives us a dynamic axis with a cusion (*1.1) so that when we have groups in the measure, our axis doesn't go too big)
