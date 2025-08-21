@@ -1,0 +1,19 @@
+% Views Growth From Previous Month = 
+var currMonth = MAX('Calendar'[Month Offset])
+var prevMonth = currMonth - 1
+var prevMonthViewsTable = 
+    SUMMARIZE(
+        FILTER(ALL('Calendar'),'Calendar'[Month Offset]=prevMonth),
+        'Calendar'[Date],
+        "__value",[Count Report Views])
+var prevMonthViews = SUMX(prevMonthViewsTable,[__value])
+var currMonthViewsTable = 
+    SUMMARIZE(
+        FILTER(ALL('Calendar'),'Calendar'[Month Offset]=currMonth),
+        'Calendar'[Date],
+        "currViews",[Count Report Views])
+var currMonthViews = SUMX(currMonthViewsTable,[currViews])
+var percentChange = 
+    DIVIDE((currMonthViews-prevMonthViews),prevMonthViews)
+return
+percentChange
