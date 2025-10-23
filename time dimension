@@ -1,0 +1,25 @@
+Time Table =
+VAR __Hours =
+    SELECTCOLUMNS(
+        GENERATESERIES(0, 23, 1),
+        "Hour", [Value]
+    )
+VAR __MinSec =
+    GENERATESERIES(0, 59, 1)
+VAR __Minutes =
+    SELECTCOLUMNS(
+        __MinSec,
+        "Minute", [Value]
+    )
+VAR __Seconds =
+    SELECTCOLUMNS(
+        __MinSec,
+        "Seconds", [Value]
+    )
+VAR __Table =
+    ADDCOLUMNS(
+        CROSSJOIN(__Hours, __Minutes, __Seconds),
+        "Time", TIME([Hour], [Minute], [Seconds])
+    )
+RETURN
+    __Table
