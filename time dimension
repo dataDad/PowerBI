@@ -1,25 +1,63 @@
-Time Table =
-VAR __Hours =
-    SELECTCOLUMNS(
-        GENERATESERIES(0, 23, 1),
-        "Hour", [Value]
-    )
-VAR __MinSec =
-    GENERATESERIES(0, 59, 1)
-VAR __Minutes =
-    SELECTCOLUMNS(
-        __MinSec,
-        "Minute", [Value]
-    )
-VAR __Seconds =
-    SELECTCOLUMNS(
-        __MinSec,
-        "Seconds", [Value]
-    )
-VAR __Table =
-    ADDCOLUMNS(
-        CROSSJOIN(__Hours, __Minutes, __Seconds),
-        "Time", TIME([Hour], [Minute], [Seconds])
-    )
-RETURN
-    __Table
+let
+    // Create a list of times for every second of the day (86400 seconds)
+    Source = List.Times(
+        #time(0,0,0),
+        24*60*60,
+        #duration(0,0,0,1)
+    ),
+    
+    // Convert to table
+    #"Converted to Table" = Table.FromList(Source, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+    
+    // Rename column
+    #"Renamed Columns" = Table.RenameColumns(#"Converted to Table",{{"Column1", "Time"}}),
+    
+    // Change type to Time
+    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns",{{"Time", type time}}),
+    
+    // Add Hour (0-23)
+    #"Added Hour" = Table.AddColumn(#"Changed Type", "Hour", each Time.Hour([Time]), Int64.Type),
+    
+    // Add Minute (0-59)
+    #"Added Minute" = Table.AddColumn(#"Added Hour", "Minute", each Time.Minute([Time]), Int64.Type),
+    
+    // Add Second (0-59)
+    #"Added Second" = Table.AddColumn(#"Added Minute", "Second", each Time.Second([Time]), Int64.Type),
+    
+    // Add Time Key (for relationships) - Format: HHMMSS
+    #"Added Time Key" = Table.AddColumn(#"Added Second", "TimeKey", each [Hour]*10000 + [Minute]*100 + [Second], Int64.Type),
+    
+    // Add Hour Minute Display (e.g., "14:30:45")
+    #"Added Time Display" = Table.AddColumn(#"Added Time Key", "Time Display", each 
+        Text.PadStart(Text.From([Hour]), 2, "0") & ":" & 
+        Text.PadStart(Text.From([Minute]), 2, "0") & ":" & 
+        Text.PadStart(Text.From([Second]), 2, "0"), 
+        type text),
+    
+    // Add 12-Hour Format (e.g., "2:30:45 PM")
+    #"Added 12Hr Format" = Table.AddColumn(#"Added Time Display", "Time 12Hr", each 
+        let
+            hour12 = if [Hour] = 0 then 12 else if [Hour] > 12 then [Hour] - 12 else [Hour],
+            ampm = if [Hour] < 12 then "AM" else "PM"
+        in
+            Text.From(hour12) & ":" & 
+            Text.PadStart(Text.From([Minute]), 2, "0") & ":" & 
+            Text.PadStart(Text.From([Second]), 2, "0") & " " & ampm, 
+        type text),
+    
+    // Add Hour Display (e.g., "14:00:00")
+    #"Added Hour Display" = Table.AddColumn(#"Added 12Hr Format", "Hour Display", each 
+        Text.PadStart(Text.From([Hour]), 2, "0") & ":00:00", 
+        type text),
+    
+    // Add Hour 12Hr Display (e.g., "2 PM")
+    #"Added Hour 12Hr Display" = Table.AddColumn(#"Added Hour Display", "Hour 12Hr Display", each 
+        let
+            hour12 = if [Hour] = 0 then 12 else if [Hour] > 12 then [Hour] - 12 else [Hour],
+            ampm = if [Hour] < 12 then "AM" else "PM"
+        in
+            Text.From(hour12) & " " & ampm, 
+        type text)
+
+in
+    #"Added Hour 12Hr Display"
