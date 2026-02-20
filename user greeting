@@ -1,7 +1,15 @@
-User Greeting = 
-var usersNameLength = SEARCH(".",USERPRINCIPALNAME())
-var firstName = LEFT(USERPRINCIPALNAME(),usersNameLength-1)
-var formattedFirstName = UPPER(LEFT(firstName,1)) & Mid(firstName,2,usersNameLength-1)
-
-return
-"Welcome to Reporting Links "  & formattedFirstName
+Greeting = 
+    VAR __UPN = USERPRINCIPALNAME()
+    VAR __Hour = HOUR( NOW() )
+    VAR __Greeting =
+        SWITCH(
+            TRUE(),
+            __Hour < 12, "Good morning, ",
+            __Hour < 17, "Good afternoon, ",
+            "Good evening, "
+        )
+    VAR __NameLength = SEARCH(".", __UPN)
+    VAR __FirstName = LEFT(__UPN, __NameLength - 1)
+    VAR __FormattedName = UPPER(LEFT(__FirstName, 1)) & MID(__FirstName, 2, __NameLength - 1)
+RETURN
+    __Greeting & __FormattedName
